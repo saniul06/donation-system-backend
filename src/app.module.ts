@@ -10,6 +10,7 @@ import * as cookieParser from 'cookie-parser';
 import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { DonationModule } from './donation/donation.module';
+import { dataSourceOptions } from 'db/data-source';
 
 @Module({
   imports: [
@@ -28,15 +29,7 @@ import { DonationModule } from './donation/donation.module';
       ),
       transports: [new winston.transports.Console()],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      username: 'postgres',
-      password: 'aaaaaa',
-      database: 'donation',
-      entities: ['dist/**/*.entity.js'],
-      migrations: ['dist/db/migrations/*.js'],
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     UserModule,
     DonationModule,
