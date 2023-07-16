@@ -18,13 +18,14 @@ export class Donation {
   @Column({
     type: 'varchar',
     length: 50,
+    nullable: false,
   })
   category: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   amount: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   contact: string;
 
   @CreateDateColumn({

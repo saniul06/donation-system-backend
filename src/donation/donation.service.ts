@@ -39,6 +39,8 @@ export class DonationService {
     if (userId) {
       const user = await this.userService.findOneBy({ id: userId });
       if (!user) throw new NotFoundException('User not found');
+      delete user.createdAt;
+      delete user.updatedAt;
       queryObj.where = { ...queryObj.where, user };
     }
     return await this.repo.find({ ...queryObj });
@@ -47,6 +49,8 @@ export class DonationService {
   async myDonations(userId: number): Promise<Donation[]> {
     const user = await this.userService.findOneBy({ id: userId });
     if (!user) throw new NotFoundException('User not found');
+    delete user.createdAt;
+    delete user.updatedAt;
     return await this.repo.find({ where: { user } });
   }
 
