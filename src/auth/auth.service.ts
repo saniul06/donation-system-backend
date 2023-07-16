@@ -17,8 +17,8 @@ export class AuthService {
   async signup(signUpData: Partial<User>) {
     const { email, password, username, role } = signUpData;
     console.log('role is: ', role);
-    const users = await this.userService.find({ email });
-    if (users.length) {
+    const user = await this.userService.findOneBy({ email });
+    if (user) {
       throw new BadRequestException('Email already in use');
     }
     const salt = randomBytes(8).toString('hex');
@@ -34,11 +34,11 @@ export class AuthService {
   }
 
   async signin(signInData: { email: string; password: string }) {
-    const users = await this.userService.find({ email: signInData.email });
-    if (users.length < 1) {
+    const user = await this.userService.findOneBy({ email: signInData.email });
+    if (!user) {
       throw new BadRequestException('Invalid email or password');
     }
-    const { id, email, username, role, password: userPassword } = users[0];
+    const { id, email, username, role, password: userPassword } = user;
     const [salt, hashedPassword] = userPassword.split('.');
     const hash = (await scrypt(signInData.password, salt, 32)) as Buffer;
     if (hash.toString('hex') !== hashedPassword) {

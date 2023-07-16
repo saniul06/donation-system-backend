@@ -9,6 +9,7 @@ import * as winston from 'winston';
 import * as cookieParser from 'cookie-parser';
 import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
+import { DonationModule } from './donation/donation.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { APP_PIPE } from '@nestjs/core';
     }),
     AuthModule,
     UserModule,
+    DonationModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
@@ -23,6 +23,9 @@ import { AuthMiddleware } from '../middlewares/auth.middleware';
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).exclude('auth/(.*)').forRoutes('*');
+    consumer
+      .apply(AuthMiddleware)
+      .exclude('auth/(.*)', { path: 'donation', method: RequestMethod.POST })
+      .forRoutes('*');
   }
 }

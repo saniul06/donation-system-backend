@@ -11,20 +11,20 @@ export class UserService {
     private repo: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.repo.find();
-  }
-
-  async find(query: IFindUser): Promise<User[]> {
-    return this.repo.find({ where: query });
-  }
-
-  async remove(id: number): Promise<void> {
-    await this.repo.delete(id);
-  }
-
-  create(userData: Partial<User>) {
+  async create(userData: Partial<User>) {
     const user = this.repo.create(userData);
-    return this.repo.save(user);
+    return await this.repo.save(user);
+  }
+
+  async findAll(): Promise<User[]> {
+    return await this.repo.find();
+  }
+
+  async findOneBy(query: IFindUser): Promise<User> {
+    return await this.repo.findOneBy(query);
+  }
+
+  async remove(id: number) {
+    await this.repo.delete(id);
   }
 }

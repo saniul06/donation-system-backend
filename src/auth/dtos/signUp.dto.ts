@@ -30,5 +30,5 @@ export class SignUpDto {
   @IsOptional()
   @IsEnum(UserRole)
   @IsString()
-  role: UserRole;
+  role!: UserRole;
 }
