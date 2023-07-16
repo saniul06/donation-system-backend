@@ -16,7 +16,6 @@ export class AuthService {
 
   async signup(signUpData: Partial<User>) {
     const { email, password, username, role } = signUpData;
-    console.log('role is: ', role);
     const user = await this.userService.findOneBy({ email });
     if (user) {
       throw new BadRequestException('Email already in use');

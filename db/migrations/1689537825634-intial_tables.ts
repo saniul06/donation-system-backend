@@ -16,6 +16,9 @@ export class IntialTables1689537825634 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "donations" ADD CONSTRAINT "FK_e0a522570e35074125c86d817ea" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
+    await queryRunner.query(
+      `INSERT INTO users (username, email, role, password) VALUES ('sani', 's@s.com', 'admin', '1a354ab2924b7408.dc618976cf9816aae6f33dbe74cb50dc9f8561117be2c6993c9b476f473a63c0')`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
