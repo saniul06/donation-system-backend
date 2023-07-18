@@ -5,6 +5,8 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Module({
   imports: [
@@ -14,18 +16,17 @@ import { AuthMiddleware } from '../middlewares/auth.middleware';
       useFactory: async (configService: ConfigService) => ({
         global: true,
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '60s' },
+        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') },
       }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    AuthService,
+  ],
 })
-export class AuthModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude('auth/(.*)', { path: 'donation', method: RequestMethod.POST })
-      .forRoutes('*');
-  }
-}
+export class AuthModule {}

@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 export class UserDto {
   @Expose()
@@ -12,4 +12,16 @@ export class UserDto {
 
   @Expose()
   role: string;
+}
+
+export class CurrentUserDto {
+  @Expose()
+  @Type(() => UserDto)
+  user: UserDto;
+}
+
+export class UserListDto {
+  @Expose()
+  @Type(() => UserDto)
+  userList: UserDto;
 }

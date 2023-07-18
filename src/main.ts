@@ -4,6 +4,8 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
+import * as cors from 'cors';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const logger = new Logger('NestApplication');
@@ -11,6 +13,13 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   });
+  // secure app by setting various HTTP headers.
+  app.use(helmet());
+  // app.use(
+  //   cors({
+  //     credentials: true,
+  //   }),
+  // );
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   // Swagger configuration
   const config = new DocumentBuilder()

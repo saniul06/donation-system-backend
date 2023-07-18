@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dtos/singIn.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +22,7 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Public()
   @Post('signup')
   async signup(@Body() signUpDto: SignUpDto) {
     try {
@@ -34,6 +36,7 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Post('signin')
   async signin(
     @Body() signInDto: SignInDto,
@@ -41,27 +44,21 @@ export class AuthController {
   ) {
     try {
       this.logger.log('Signin request');
-      const accessToken = await this.authService.signin(signInDto);
+      const { userData, accessToken } = await this.authService.signin(
+        signInDto,
+      );
       response.cookie(
         this.configService.get<string>('ACCESS_TOKEN_NAME'),
         accessToken,
       );
-      return { success: true, message: 'Signin successful' };
+      return {
+        success: true,
+        message: 'Signin successful',
+        user: userData,
+        token: `Bearer ${accessToken}`,
+      };
     } catch (err) {
       this.logger.error(`Signin request failed with error: ${err.stack}`);
-      if (err?.status) throw err;
-      throw new InternalServerErrorException();
-    }
-  }
-
-  @Get('signout')
-  signout(@Res({ passthrough: true }) response: Response) {
-    try {
-      this.logger.log('Signout request');
-      response.clearCookie(this.configService.get<string>('ACCESS_TOKEN_NAME'));
-      return { success: true, message: 'Signout successful' };
-    } catch (err) {
-      this.logger.error(`Signout request failed with error: ${err.stack}`);
       if (err?.status) throw err;
       throw new InternalServerErrorException();
     }

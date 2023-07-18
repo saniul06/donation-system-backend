@@ -43,11 +43,9 @@ export class AuthService {
     if (hash.toString('hex') !== hashedPassword) {
       throw new BadRequestException('Invalid email or password');
     }
-    return await this.jwtService.signAsync({
-      id,
-      email,
-      username,
-      role,
-    });
+
+    const userData = { id, email, username, role };
+    const accessToken = await this.jwtService.signAsync(userData);
+    return { accessToken, userData };
   }
 }

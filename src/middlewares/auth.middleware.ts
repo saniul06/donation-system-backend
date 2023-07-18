@@ -30,15 +30,22 @@ export class AuthMiddleware implements NestMiddleware {
       });
       req.user = payload;
     } catch {
+      console.log('hhhhhhhhhhhhhhhhhhhhhhhhh');
       throw new UnauthorizedException();
     }
 
     next();
   }
 
+  // private extractTokenFromHeader(request: Request): string | undefined {
+  //   const accessToken =
+  //     request.cookies[this.configService.get<string>('ACCESS_TOKEN_NAME')];
+  //   return accessToken ? accessToken : undefined;
+  // }
+
   private extractTokenFromHeader(request: Request): string | undefined {
-    const accessToken =
-      request.cookies[this.configService.get<string>('ACCESS_TOKEN_NAME')];
-    return accessToken ? accessToken : undefined;
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    console.log('type', type, ' token:  ', token);
+    return type === 'Bearer' ? token : undefined;
   }
 }

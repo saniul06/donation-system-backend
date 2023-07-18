@@ -21,12 +21,14 @@ import { UpdateDonationDto } from './dtos/update-donation.dto';
 import { AdminGuard } from '../guards/admin.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { User } from '../user/user.entity';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('donation')
 export class DonationController {
   private readonly logger = new Logger(DonationController.name);
   constructor(private donationService: DonationService) {}
 
+  @Public()
   @Post('/')
   async createDonation(@Body() body: CreateDonationDto) {
     try {
