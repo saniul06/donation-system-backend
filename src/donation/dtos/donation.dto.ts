@@ -15,9 +15,51 @@ export class DonationDto {
   amount: number;
 
   @Expose()
-  deletedAt: number;
+  createdAt: number;
 
   @Expose()
   @Type(() => UserDto)
   user: UserDto;
+}
+
+export class CreatedDonationDTO {
+  @Expose()
+  @Type(() => DonationDto)
+  createdDonation: DonationDto;
+
+  @Expose()
+  success: boolean;
+
+  @Expose()
+  message: string;
+}
+
+export class UpdatedDonationDTO {
+  @Expose()
+  @Type(() => DonationDto)
+  updatedDonation: DonationDto;
+
+  @Expose()
+  success: boolean;
+
+  @Expose()
+  message: string;
+}
+
+export class AllDonationDto {
+  @Expose()
+  success: string;
+
+  @Expose()
+  @Type(() => DonationDto)
+  donationList: DonationDto;
+}
+
+export class MyDonationDto {
+  @Expose()
+  success: string;
+
+  @Expose()
+  @Type(() => DonationDto)
+  myDonationList: DonationDto;
 }
