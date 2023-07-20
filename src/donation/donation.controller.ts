@@ -18,11 +18,10 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import {
   AllDonationDto,
   CreatedDonationDTO,
-  DonationDto,
   MyDonationDto,
   UpdatedDonationDTO,
 } from './dtos/donation.dto';
-import { DonationFetchDto } from './dtos/donation-fetch.dto';
+import { FetchDonationDto } from './dtos/fetch-donation.dto';
 import { UpdateDonationDto } from './dtos/update-donation.dto';
 import { AdminGuard } from '../guards/admin.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
@@ -59,7 +58,7 @@ export class DonationController {
   @UseGuards(AdminGuard)
   @Serialize(AllDonationDto)
   @Get('/')
-  async getAllDonations(@Query() query: DonationFetchDto) {
+  async getAllDonations(@Query() query: FetchDonationDto) {
     try {
       this.logger.log('Fetch all donation request');
       const donationList = await this.donationService.findAll(query);
@@ -137,6 +136,22 @@ export class DonationController {
     } catch (err) {
       this.logger.error(
         `Donation delete request failed with error ${err.stack}`,
+      );
+      if (err?.status) throw err;
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @UseGuards(AdminGuard)
+  @Get('/summary')
+  async donationSummary(@Query() query: FetchDonationDto) {
+    try {
+      this.logger.log('Fetch donation summary request');
+      const donationSummary = await this.donationService.donationSummary(query);
+      return { success: true, donationSummary };
+    } catch (err) {
+      this.logger.error(
+        `Fetch donation summary request failed with error ${err.stack}`,
       );
       if (err?.status) throw err;
       throw new InternalServerErrorException();

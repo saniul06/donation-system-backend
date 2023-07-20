@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class MyDonationFetchDto {
   @ApiProperty({
@@ -23,4 +23,13 @@ export class MyDonationFetchDto {
   @Type(() => Number)
   @IsOptional()
   id?: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Donor"s category',
+    example: 'জরুরী বন্যা তহবিল',
+  })
+  @IsString()
+  @IsOptional()
+  category?: string;
 }

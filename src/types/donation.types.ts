@@ -9,4 +9,5 @@ export interface IFindDonation {
   id?: number;
   lastId?: number;
   userId?: number;
+  category?: string;
 }

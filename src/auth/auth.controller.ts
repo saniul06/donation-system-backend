@@ -1,26 +1,19 @@
 import {
   Body,
   Controller,
-  Get,
   InternalServerErrorException,
   Logger,
   Post,
-  Res,
 } from '@nestjs/common';
 import { SignUpDto } from './dtos/signUp.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dtos/singIn.dto';
-import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
 import { Public } from '../decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
-  constructor(
-    private authService: AuthService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Public()
   @Post('signup')
@@ -38,18 +31,11 @@ export class AuthController {
 
   @Public()
   @Post('signin')
-  async signin(
-    @Body() signInDto: SignInDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async signin(@Body() signInDto: SignInDto) {
     try {
       this.logger.log('Signin request');
       const { userData, accessToken } = await this.authService.signin(
         signInDto,
-      );
-      response.cookie(
-        this.configService.get<string>('ACCESS_TOKEN_NAME'),
-        accessToken,
       );
       return {
         success: true,
